@@ -7,6 +7,7 @@ mkdir -p "${BRKRM_PACKAGE_DIR}"
 
 for poster_path in "${BRKRM_ASSETS_DIR}"/posters/*; do
     brkrm-tool poster_asset_gen poster "${poster_path}" "${BRKRM_PACKAGE_DIR}"
+    brkrm-tool poster_asset_gen tip "${poster_path}" "${BRKRM_PACKAGE_DIR}"
 done
 
 brkrm-package

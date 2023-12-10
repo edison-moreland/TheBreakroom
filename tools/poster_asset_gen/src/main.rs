@@ -5,7 +5,7 @@ use std::fs::create_dir_all;
 use std::path::PathBuf;
 
 use clap::{Parser, ValueEnum};
-use image::{DynamicImage, ImageFormat, imageops::FilterType};
+use image::{DynamicImage, ImageBuffer, ImageFormat, imageops::FilterType, Rgba};
 
 const POSTER_TEMPLATE: &[u8] = include_bytes!("../assets/poster_template.png");
 // const PAINTING_TEMPLATE: &[u8] = include_bytes!("../assets/painting_template.png");
@@ -31,13 +31,11 @@ fn main() {
 
     let input_image = image::open(&cli.input_file).expect("input file to load");
 
-    let poster_output_dir = cli.output_folder.join("BepInEx/plugins/LethalPosters/posters");
-    let tips_output_dir = cli.output_folder.join("BepInEx/plugins/LethalPosters/tips");
-    create_dir_all(&poster_output_dir).expect("folder create please :(");
-    create_dir_all(&tips_output_dir).expect("folder create please :(");
 
     match cli.kind {
         AssetKind::Poster => {
+            let poster_output_dir = cli.output_folder.join("BepInEx/plugins/LethalPosters/posters");
+            create_dir_all(&poster_output_dir).expect("folder create please :(");
 
             let poster_template_image = image::load_from_memory_with_format(POSTER_TEMPLATE, ImageFormat::Png).expect("Poster template to load");
 
@@ -54,7 +52,16 @@ fn main() {
             // let painting_template_image = image::load_from_memory_with_format(PAINTING_TEMPLATE, ImageFormat::Png).expect("Poster template to load");
             unimplemented!()
         }
-        AssetKind::Tip => { unimplemented!() }
+        AssetKind::Tip => {
+            let tips_output_dir = cli.output_folder.join("BepInEx/plugins/LethalPosters/tips");
+            create_dir_all(&tips_output_dir).expect("folder create please :(");
+            
+            let tips = generate_tips(&input_image);
+
+            let tips_output_file = tips_output_dir.join(input_name);
+
+            tips.save(tips_output_file).expect("tips image to save correctly");
+        }
     }
 }
 
@@ -77,5 +84,12 @@ fn generate_poster_atlas(template: &DynamicImage, poster: &DynamicImage) -> Dyna
         let p = poster.resize(o[2], o[3], FilterType::Lanczos3);
         image::imageops::overlay(&mut base, &p, (o[0] + o[2] - p.width()) as i64, o[1] as i64);
     }
+    base
+}
+
+fn generate_tips(poster: &DynamicImage) -> ImageBuffer<Rgba<u8>, Vec<u8>> {
+    let mut base = ImageBuffer::new(796, 1024);
+    let p = poster.resize(796, 1024, FilterType::Lanczos3);
+    image::imageops::overlay(&mut base, &p, (796 - p.width()) as i64, 0);
     base
 }
