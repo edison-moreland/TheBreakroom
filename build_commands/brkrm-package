@@ -3,4 +3,6 @@
 
 cp "${BRKRM_REPO_DIR}/package/"* "${BRKRM_PACKAGE_DIR}"
 
-zip -r "${BRKRM_BUILD_DIR}/breakroom.zip" "${BRKRM_PACKAGE_DIR}"
+pushd "${BRKRM_PACKAGE_DIR}"
+zip -r "../breakroom.zip" .
+popd

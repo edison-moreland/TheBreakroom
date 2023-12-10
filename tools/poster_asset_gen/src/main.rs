@@ -31,10 +31,13 @@ fn main() {
 
     let input_image = image::open(&cli.input_file).expect("input file to load");
 
+    let poster_output_dir = cli.output_folder.join("BepInEx/plugins/LethalPosters/posters");
+    let tips_output_dir = cli.output_folder.join("BepInEx/plugins/LethalPosters/tips");
+    create_dir_all(&poster_output_dir).expect("folder create please :(");
+    create_dir_all(&tips_output_dir).expect("folder create please :(");
+
     match cli.kind {
         AssetKind::Poster => {
-            let poster_output_dir = cli.output_folder.join("BepInEx/plugins/LethalPosters/posters");
-            create_dir_all(&poster_output_dir).expect("folder create please :(");
 
             let poster_template_image = image::load_from_memory_with_format(POSTER_TEMPLATE, ImageFormat::Png).expect("Poster template to load");
 
