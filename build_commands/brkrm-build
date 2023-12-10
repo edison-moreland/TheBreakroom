@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#-Help: Builds it all
+
+mkdir -p "${BRKRM_PACKAGE_DIR}"
+
+for poster_path in "${BRKRM_ASSETS_DIR}"/posters/*; do
+    brkrm-tool poster_asset_gen poster "${poster_path}" "${BRKRM_PACKAGE_DIR}"
+done
+
+brkrm-package

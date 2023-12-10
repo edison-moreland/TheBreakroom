@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+#-Help: Remove all built artifacts
+
+rm -r "${BRKRM_BUILD_DIR}"

@@ -1,0 +1,9 @@
+{
+    "name": "TheBreakroom",
+    "version_number": "0.0.1",
+    "website_url": "https://github.com/edison-moreland/TheBreakroom",
+    "description": "Some garbage assets",
+    "dependencies": [
+        "femboytv-LethalPosters-1.2.0"
+    ]
+}

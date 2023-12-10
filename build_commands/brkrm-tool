@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+#-Help: Runs a custom tool
+#-Use: <tool_name>
+
+source "${BRKRM_LIB_DIR}/logging.sh"
+
+TOOL_NAME="$1"
+export TOOL_DIR="${BRKRM_TOOLS_DIR}/${TOOL_NAME}"
+
+if [ ! -d "${TOOL_DIR}" ]; then
+    log_fatal "There is no tool named ${TOOL_NAME}"
+fi
+
+shift 1
+pushd "${TOOL_DIR}" > /dev/null
+./run-tool "$@"
+popd > /dev/null

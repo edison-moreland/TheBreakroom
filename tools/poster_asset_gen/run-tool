@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+export CARGO_HOME="${BRKRM_BUILD_DIR}/.cargo"
+export CARGO_TARGET_DIR="../../.build/target"
+
+cargo run -- "$@"

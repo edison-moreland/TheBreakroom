@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#-Help: Copy static package files and zip
+
+cp "${BRKRM_REPO_DIR}/package/"* "${BRKRM_PACKAGE_DIR}"
+
+zip -r "${BRKRM_BUILD_DIR}/breakroom.zip" "${BRKRM_PACKAGE_DIR}"

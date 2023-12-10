@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+export BRKRM_REPO_DIR="$(dirname "$(realpath "$0")")"
+export BRKRM_BUILD_DIR="${BRKRM_REPO_DIR}/.build"
+export BRKRM_PACKAGE_DIR="${BRKRM_BUILD_DIR}/package"
+export BRKRM_COMMANDS_DIR="${BRKRM_REPO_DIR}/build_commands"
+export BRKRM_LIB_DIR="${BRKRM_COMMANDS_DIR}/lib"
+export BRKRM_ASSETS_DIR="${BRKRM_REPO_DIR}/assets"
+export BRKRM_TOOLS_DIR="${BRKRM_REPO_DIR}/tools"
+
+export PATH="${BRKRM_COMMANDS_DIR}:${PATH}"
+
+source "${BRKRM_LIB_DIR}/logging.sh"
+
+# TODO: Make a list of cmd deps
+if ! which jq >/dev/null; then
+	log_fatal "Please install jq!"
+fi
+if ! which flock >/dev/null; then
+	log_fatal "Please install flock!"
+fi
+
+cmd="${1:-help}"
+brkrm_command="brkrm-$cmd"
+if ! which "${brkrm_command}" > /dev/null; then
+    log_fatal "Unknown cmd $cmd"
+fi
+
+mkdir -p "${BRKRM_BUILD_DIR}"
+{
+    if ! flock -n 9; then
+        log_fatal "Could not obtain lock"
+    fi
+
+    "${brkrm_command}" "${@:2}"
+} 9>"${BRKRM_BUILD_DIR}/.brkrmlock"
